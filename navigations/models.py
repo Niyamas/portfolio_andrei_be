@@ -1,19 +1,19 @@
 from django.db import models
 from django.utils.text import slugify
 from wagtail.core.models import Orderable
-from modelcluster.fields import ParentalKey
-from modelcluster.models import ClusterableModel
 from wagtail.admin.edit_handlers import (
   MultiFieldPanel,
   InlinePanel,
   FieldPanel,
   PageChooserPanel
 )
+from modelcluster.fields import ParentalKey
+from modelcluster.models import ClusterableModel
 
 
 class Links(Orderable):
   """
-    Children of the Navigation model.
+  Children of the Navigation model.
   """
 
   class LinkTypes(models.TextChoices):
@@ -34,11 +34,10 @@ class Links(Orderable):
     FieldPanel('type'),
   ]
 
-
 class Navigation(ClusterableModel):
   """
-    Can create navigation names like header menu & footer menu,
-    and their corresponding links.
+  Can create navigation names like header menu & footer menu,
+  and their corresponding links.
   """
 
   title = models.CharField(max_length=100)
