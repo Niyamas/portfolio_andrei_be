@@ -12,6 +12,9 @@ from wagtail.admin.edit_handlers import (
 
 
 class Links(Orderable):
+  """
+    Children of the Navigation model.
+  """
 
   class LinkTypes(models.TextChoices):
     DEFAULT = 1, 'Default'
@@ -33,7 +36,10 @@ class Links(Orderable):
 
 
 class Navigation(ClusterableModel):
-  """The main menu clusterable model."""
+  """
+    Can create navigation names like header menu & footer menu,
+    and their corresponding links.
+  """
 
   title = models.CharField(max_length=100)
   slug = models.SlugField(unique=True, blank=False, null=True)
