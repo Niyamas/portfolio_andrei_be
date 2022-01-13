@@ -17,5 +17,5 @@ class TypeChoiceSerializer(ChoiceField):
 
     for key, val in self._choices.items():
         if val == data:
-            return int(key)
+            return key
     self.fail('invalid_choice', input=data)
