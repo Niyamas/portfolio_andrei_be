@@ -7,31 +7,39 @@ from wagtail.admin.edit_handlers import (
   FieldPanel,
   PageChooserPanel
 )
+from wagtail.api import APIField
 from modelcluster.fields import ParentalKey
 from modelcluster.models import ClusterableModel
-
+from .serializers import TypeChoiceSerializer
 
 class Links(Orderable):
   """
   Children of the Navigation model.
   """
 
-  class LinkTypes(models.TextChoices):
+  class LinkTypes(models.IntegerChoices):
     DEFAULT = 1, 'Default'
-    OPEN_IN_NEW_TAB = 2, 'Open in new tab'
-    ANCHOR_TAG = 3, 'Anchor tag'
+    ANCHOR_TAG = 2, 'Anchor tag'
+    OPEN_IN_NEW_TAB = 3, 'Open in new tab'
 
   title = models.CharField(max_length=50, blank=False, null=True)
   page = models.ForeignKey('wagtailcore.Page', blank=True, null=True, related_name='+', on_delete=models.CASCADE)
   url = models.CharField(max_length=500, blank=True)
-  type = models.PositiveSmallIntegerField(choices=LinkTypes.choices, default=LinkTypes.DEFAULT, null=False, blank=False)
+  link_type = models.PositiveSmallIntegerField(choices=LinkTypes.choices, default=LinkTypes.DEFAULT, null=False, blank=False)
   child_of = ParentalKey('Navigation', related_name='links')
 
   panels = [
     FieldPanel('title'),
     PageChooserPanel('page'),
     FieldPanel('url'),
-    FieldPanel('type'),
+    FieldPanel('link_type'),
+  ]
+
+  api_fields = [
+    APIField('title'),
+    APIField('page'),
+    APIField('url'),
+    APIField('link_type', serializer=TypeChoiceSerializer(choices=LinkTypes)),
   ]
 
 class Navigation(ClusterableModel):
@@ -49,6 +57,12 @@ class Navigation(ClusterableModel):
       FieldPanel('slug'),
     ], heading='Navigation'),
     InlinePanel('links', label='Links')                    # Referenced in Link's page ParentalKey
+  ]
+
+  api_fields = [
+    APIField('title'),
+    APIField('slug'),
+    APIField('links'),
   ]
 
   def __str__(self):
